@@ -1,11 +1,13 @@
 FROM debian:latest
 
 RUN apt update && apt upgrade && apt install -y \
-    php-fpm \
-    php-mysqli \
-    curl
+    mariadb-server
 
-COPY www.conf /etc/php/8.2/fpm/pool.d/.
+COPY 50-server.cnf /etc/mysql/mariadb.conf.d/.
+COPY init.sql /etc/mysql/init.sql
 COPY script.sh .
+
+RUN mkdir /run/mysqld
 RUN chmod +x script.sh
+
 CMD ["./script.sh"]
